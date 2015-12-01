@@ -27,8 +27,8 @@ cat path/tofile.xyz | molecule
 ```
 
 ### Requires ###
-* SDL 2
-* Legacy OpenGL
+* [SDL 2](https://www.libsdl.org/)
+* Legacy OpenGL. (In the future I may add modern OpenGL support.)
 * C++11
 
 
