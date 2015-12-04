@@ -182,8 +182,6 @@ public:
     
 private:
 
-    std::vector<double> vertexBuffer;
-    std::vector<double> bondBuffer;
 };
 
 

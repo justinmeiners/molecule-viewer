@@ -15,6 +15,17 @@
 #include <fstream>
 #include <tuple>
 
+/* TODO 
+ Gldrawarrays
+ Vector reserve
+ Indexed atom lookup
+ Templates chemistry
+ Surface normals
+ Correct rotation
+ Color calculation
+ 
+ */
+
 
 
 /* supports most main group elements */
