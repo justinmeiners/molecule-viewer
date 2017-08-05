@@ -19,25 +19,23 @@ int main(int argc, const char * argv[])
     Renderer gl;
     MoleculeParser<> parser(chem);
 
-    /* read from either stdin or file from argument */
+    // read from either stdin or file from argument
     Molecule molecule = (argc == 2) ? parser.ParseMolecule(argv[1]) : parser.ParseMolecule(std::cin);
     
     
     View<> view(-20, -20, 10, 0, 0, 0);
-    
-    
+      
     if (SDL_Init(SDL_INIT_VIDEO) == -1)
     {
         printf("failed to init SDL\n");
         return 1;
-    }
-    
+    } 
     
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_RendererInfo rendererInfo;
-    int width = 800;
-    int height = 600;
+    int width = 640;
+    int height = 480;
     
     SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_OPENGL, &window, &renderer);
 

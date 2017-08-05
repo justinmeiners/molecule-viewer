@@ -8,7 +8,7 @@ Molecule viewer is a C++ program for visualizing chemical molecules stored in th
 
 NOTE: This does not aim to be a fully featured program, rather just an experiment in chemical file parsing and rendering.
 
-![screen1](https://raw.github.com/justinmeiners/molecule-viewer/master/screenshots/screen1.png)
+![screen1](screenshots/screen1.png)
 
 
 ### Technical ###
@@ -28,11 +28,12 @@ cat path/tofile.xyz | molecule
 
 ### Requires ###
 * [SDL 2](https://www.libsdl.org/)
-* Legacy OpenGL. (In the future I may add modern OpenGL support.)
+* Legacy OpenGL.
 * C++11
+* The Makefile is setup for mac, although it should be easy to change for another OS.
 
 
 ### More Screenshots ###
 
-![screen2](https://raw.github.com/justinmeiners/molecule-viewer/master/screenshots/screen2.png)
-![screen3](https://raw.github.com/justinmeiners/molecule-viewer/master/screenshots/screen3.png)
+![screen2](screenshots/screen2.png)
+![screen3](screenshots/screen3.png)
