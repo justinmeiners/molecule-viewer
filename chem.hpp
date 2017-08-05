@@ -9,11 +9,13 @@
 #ifndef CHEM_HPP
 #define CHEM_HPP
 
-#include <stdio.h>
+#include <algorithm>
+#include <tuple>
 #include <vector>
+#include <iostream>
 #include <istream>
 #include <fstream>
-#include <tuple>
+#include <stdio.h>
 
 /* TODO 
  Gldrawarrays
@@ -28,9 +30,10 @@
 
 
 
-/* supports most main group elements */
+// supports most main group elements
 
-enum Symbol{
+enum Symbol 
+{
     INVALID = -1,
     H = 1, He,
     Li, Be, B, C, N, O, F,Ne,
@@ -47,35 +50,27 @@ class AtomType
 public:
     AtomType(Symbol symbol, const std::string& name, Num radius, Num bondRadius)
     : symbol(symbol), name(name), radius(radius), bondRadius(bondRadius)
-    {
-    }
+    {}
     
     Symbol symbol;
     std::string name;
     
-    /* atomic radius */
+    // atomic radius 
     Num radius;
-    /* covalent radius */
+    // covalent radius
     Num bondRadius;
 };
 
 template <class Num=double>
-class Atom
+struct Atom
 {
-public:
-    Atom(Symbol type)
-    : symbol(type)
-    {
+    Atom(Symbol type) : symbol(type) {}
         
-    }
-    
-    
     Symbol symbol;
     Num x;
     Num y;
     Num z;
-    
-    
+     
     Num DistanceSquared(const Atom<Num>& other) const
     {
         return (x-other.x)*(x-other.x)+(y-other.y)*(y-other.y)+(z-other.z)*(z-other.z);
@@ -83,16 +78,14 @@ public:
 };
 
 
-
-class Molecule {
-public:
+struct Molecule 
+{
     std::vector<Atom<>> atoms;
     std::vector<std::tuple<int, int>> bonds;
-
 };
 
 
-/* chemistry world simulator */
+// chemistry world simulator
 
 template <class Num=double>
 class Chemistry
@@ -193,36 +186,28 @@ public:
     
     Symbol SymbolFromName(const std::string& name) const
     {
-        for (auto it = table.begin(); it != table.end(); it++)
-        {
-            if ((*it).name == name)
-            {
-                return (*it).symbol;
-            }
-        }
-        
-        return Symbol::INVALID;
-    }
-    
-    const AtomType<>& FindAtomType(Symbol symbol) const
-    {
-        for (auto it = table.begin(); it != table.end(); it++)
-        {
-            if ((*it).symbol == symbol)
-            {
-                return (*it);
-            }
-        }
-        
-        return table[0];
-    }
+   }
     
     bool AtomsCanBond(const Atom<>& atom1, const Atom<>& atom2) const
     {
         double distance = atom1.DistanceSquared(atom2);
-        
-        double radius1 = FindAtomType(atom1.symbol).bondRadius;
-        double radius2 = FindAtomType(atom2.symbol).bondRadius;
+
+
+        auto it1 = std::find_if(table.cbegin(), table.cend(), [&atom1](const AtomType<>& x) {
+            return x.symbol == atom1.symbol;
+        }); 
+
+        auto it2 = std::find_if(table.cbegin(), table.cend(), [&atom2](const AtomType<>& x) {
+            return x.symbol == atom2.symbol;
+        }); 
+
+
+        if (it1 == table.cend() || it2 == table.cend())
+            return false;
+
+       
+        double radius1 = (*it1).bondRadius;
+        double radius2 = (*it2).bondRadius;
         
         /* 1.1 is multiplied to help fill some gaps */
         double radius =  (radius1+radius2)*(radius1+radius2) * 1.1;
@@ -247,9 +232,7 @@ template <class Num=double>
 class MoleculeParser {
 public:
     MoleculeParser(const Chemistry<Num>& table)
-    : chem(table)
-    {
-    }
+    : chem(table) {}
     
     Molecule ParseMolecule(std::istream& stream)
     {
@@ -266,9 +249,14 @@ public:
             
             if (sscanf(line.c_str(), "%s %lf %lf %lf", atomName, &x, &y, &z) == 4)
             {
-                Symbol symbol = chem.SymbolFromName(atomName);
+                auto it = std::find_if(chem.table.cbegin(), chem.table.cend(), [&atomName](const AtomType<>& x) {
+                    return x.name == atomName;
+                });
+ 
+                if (it == chem.table.cend())
+                    continue; 
                 
-                Atom<> newAtom(symbol);
+                Atom<> newAtom((*it).symbol);
                 newAtom.x = x;
                 newAtom.y = y;
                 newAtom.z = z;
